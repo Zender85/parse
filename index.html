@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<style>
+	body {
+		text-align: center;
+	}
+		textarea {
+			display: block;
+			margin: 0 auto;
+			width: 50%;
+			height: 200px;
+		}
+	</style>
+<!-- <script src="evoplay_games.js"></script> -->
+<textarea name="" id="games_list" placeholder="JSON со списком игр"></textarea>
+
+<br>
+<button id="download_images">download</button>
+<script>
+
+	function downloadImage(url, imgname) {
+		fetch(url, {mode: 'no-cors'})
+  .then(resp => resp.blob())
+  .then(blob => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    // the filename you want
+    a.download = imgname;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  })
+  .catch(() => console.log('oh no!'));
+	}
+
+	download_images.onclick = function(){
+		if (games_list.value) {
+			var games = JSON.parse(games_list.value),
+				check = games[0].id;
+				console.log(!!check);
+			if (!!check && typeof games != "undefined") {
+				for(i=0; i < games.length; i++){
+
+					let imgname = games[i].id + '_' + games[i].name;
+					if (games[i].image.includes("http")) {
+						downloadImage(games[i].image, imgname);
+				console.log(games[i].id);
+					}
+				
+				}
+			} else {
+				alert('Что-то пошло не так, выключайте компьютер и уходите!')
+			}
+			
+		} else {
+			alert('Вставьте json в поле со списком игр!');
+		}
+	}
+
+	
+</script>
+<!-- <script>
+	fetch('https://cors-anywhere.herokuapp.com/https://static.egamings.com/games/asialivetech/alt_lobby.jpg')
+  .then(resp => resp.blob())
+  .then(blob => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    // the filename you want
+    a.download = 'todo-1';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  })
+  .catch(() => alert('oh no!'));
+</script> -->
+</body>
+</html>
